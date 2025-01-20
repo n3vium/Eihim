@@ -9,5 +9,6 @@
 Скачивание треков: _Всё указано в меню._
 
 ## Сообщить об ошибке, поблагодарить:
-__Телеграм__: t.me/d3velo
-__КриптоБот(t.me/send)__: http://t.me/send?start=IVzUVa025IeP
+__Телеграм__: https://t.me/d3velo
+.
+__КриптоБот(t.me/send)__: https://t.me/send?start=IVzUVa025IeP
