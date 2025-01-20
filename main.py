@@ -398,12 +398,20 @@ def search_and_show_tracks():
     
     # Поиск в YouTube
     try:
-        videosSearch = VideosSearch(query, limit=5)
-        results = videosSearch.result()["result"]
-        search_results['youtube'] = results
-        print("\nYouTube (y1-y5):")
-        for i, video in enumerate(results, 1):
-            print(f"y{i}. {video['title']}")
+        ydl_opts = {
+            'quiet': True,
+            'no_warnings': True,
+            'extract_flat': True,
+            'default_search': 'ytsearch5'  # Ищем 5 видео
+        }
+        
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            results = ydl.extract_info(f"ytsearch:{query}", download=False)
+            if results and results.get('entries'):
+                search_results['youtube'] = results['entries']
+                print("\nYouTube (y1-y5):")
+                for i, video in enumerate(results['entries'], 1):
+                    print(f"y{i}. {video['title']}")
     except Exception as e:
         print(f"Ошибка при поиске в YouTube: {str(e)}")
     
@@ -441,13 +449,13 @@ def search_and_show_tracks():
                     'name': track['name'],
                     'performers': ", ".join([artist['name'] for artist in track['artists']]),
                     'search_query': f"{', '.join([artist['name'] for artist in track['artists']])} - {track['name']}",
-                    'type': 'track',  # Добавляем тип
+                    'type': 'track',
                     'thumbnail_url': track['album']['images'][0]['url'] if track['album']['images'] else None
                 }
             elif platform == 'youtube':
                 track_info = {
-                    'url': search_results['youtube'][index]['link'],
-                    'type': platform  # Добавляем тип
+                    'url': search_results['youtube'][index]['url'],
+                    'type': platform
                 }
             
             download_track(track_info, platform, None)
