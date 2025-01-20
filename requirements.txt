@@ -1,5 +1,4 @@
 spotipy
-youtube-search-python
 yt-dlp
 mutagen
 requests 

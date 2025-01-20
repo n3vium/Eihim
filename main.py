@@ -337,10 +337,17 @@ def download_track(track_info, platform, preset_source=None):
 def search_track(query):
     """Поиск трека на YouTube"""
     try:
-        videosSearch = VideosSearch(query, limit=1)
-        results = videosSearch.result()
-        if results and results.get("result"):
-            return results["result"][0]['link']
+        ydl_opts = {
+            'quiet': True,
+            'no_warnings': True,
+            'extract_flat': True,
+            'default_search': 'ytsearch1'  # Ищем только 1 видео
+        }
+        
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            result = ydl.extract_info(f"ytsearch:{query}", download=False)
+            if result and result.get('entries'):
+                return result['entries'][0]['url']
         return None
     except Exception as e:
         raise Exception(f"Ошибка при поиске видео: {str(e)}")
