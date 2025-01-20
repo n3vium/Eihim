@@ -298,7 +298,7 @@ def download_track(track_info, platform, preset_source=None):
         source = preset_source or select_download_source(platform, track_info)
         
         if platform == 'spotify':
-            video_url = search(track_info['search_query'])
+            video_url = search_track(track_info['search_query'])
             name = f"{track_info['performers']} - {track_info['name']}"
             thumbnail_url = track_info.get('thumbnail_url')
         else:
@@ -334,10 +334,14 @@ def download_track(track_info, platform, preset_source=None):
         print(f"Произошла ошибка при загрузке: {str(e)}")
         raise
 
-def search(query):
+def search_track(query):
+    """Поиск трека на YouTube"""
     try:
         videosSearch = VideosSearch(query, limit=1)
-        return videosSearch.result()["result"][0]["link"]
+        results = videosSearch.result()
+        if results and results.get("result"):
+            return results["result"][0]['link']
+        return None
     except Exception as e:
         raise Exception(f"Ошибка при поиске видео: {str(e)}")
 
